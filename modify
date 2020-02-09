@@ -1,0 +1,25 @@
+#!/bin/sh
+#Lucas Manker
+#Homework 2
+#2/7/20
+
+for arg in "$@"
+do
+   if [[ -d $arg ]]; then
+      echo "$arg, is a directory."
+   elif [[ -x $arg ]]; then
+      echo "$arg, cannot edit executables."
+   elif [[ -f $arg ]]; then
+      if [[ "$(file "$arg")" =~ ': ASCII text'$ ]]; then
+         now="$(date +'%A, %b %d, %Y: %H%M')"
+         echo 'Modified on: '"$now" >> $arg
+         echo 'Modified by: '"$USER" >> $arg
+         printf '1m2\nw\n' | ed -s $arg
+         printf ',s/Gradez/Grades\nw\n' | ed -s $arg > /dev/null 2>&1
+      else
+         echo "$arg, filetype not supported"
+      fi
+   else
+      echo "$arg, filetype not supported"
+   fi
+done
