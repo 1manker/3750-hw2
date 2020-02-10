@@ -17,14 +17,19 @@ do
       echo "$arg, cannot edit executables."
    elif [[ -f $arg ]]; then
       if [[ "$(file "$arg")" =~ ': ASCII text'$ ]]; then 
-         echo 'Modified on: '"$now" >> $arg
-         echo 'Modified by: '"$USER" >> $arg
+         ed -s $arg <<-HERE
+         a
+Modified on: $now
+Modified by: $USER
+.
+         w
+HERE
          ed -s $arg <<-HERE
          1m2
          w
 HERE
          ed -s $arg <<-HERE > /dev/null 2>&1
-         ,s/Gradez/Grades
+         ,s/Gradez/Grades/g
          w
 HERE
       else
