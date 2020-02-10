@@ -5,6 +5,10 @@
 
 now="$(date +'%A, %b %d, %Y: %H%M')"
 
+if [[ $# -lt 1 ]]; then
+   echo "usage: modify filename [filename ....]"
+fi
+
 for arg in "$@"
 do
    if [[ -d $arg ]]; then
@@ -15,8 +19,14 @@ do
       if [[ "$(file "$arg")" =~ ': ASCII text'$ ]]; then 
          echo 'Modified on: '"$now" >> $arg
          echo 'Modified by: '"$USER" >> $arg
-         printf '1m2\nw\n' | ed -s $arg
-         printf ',s/Gradez/Grades\nw\n' | ed -s $arg > /dev/null 2>&1
+         ed -s $arg <<-HERE
+         1m2
+         w
+HERE
+         ed -s $arg <<-HERE > /dev/null 2>&1
+         ,s/Gradez/Grades
+         w
+HERE
       else
          echo "$arg, filetype not supported"
       fi
