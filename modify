@@ -3,6 +3,8 @@
 #Homework 2
 #2/7/20
 
+now="$(date +'%A, %b %d, %Y: %H%M')"
+
 for arg in "$@"
 do
    if [[ -d $arg ]]; then
@@ -10,8 +12,7 @@ do
    elif [[ -x $arg ]]; then
       echo "$arg, cannot edit executables."
    elif [[ -f $arg ]]; then
-      if [[ "$(file "$arg")" =~ ': ASCII text'$ ]]; then
-         now="$(date +'%A, %b %d, %Y: %H%M')"
+      if [[ "$(file "$arg")" =~ ': ASCII text'$ ]]; then 
          echo 'Modified on: '"$now" >> $arg
          echo 'Modified by: '"$USER" >> $arg
          printf '1m2\nw\n' | ed -s $arg
